@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+
+  sandbox-prolog:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    container_name: sandbox-prolog
+    image: sandbox-prolog
+    volumes:
+      - ../src:/app/src:ro
+    ports:
+      - "9003:9003"
+    restart: on-failure
