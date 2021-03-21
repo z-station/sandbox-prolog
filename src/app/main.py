@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask import render_template
 from flask_cors import CORS
 
 from app.entities.request import (
@@ -17,6 +18,11 @@ app = Flask(__name__)
 # CORS(app, origins=config.CORS_DOMAINS)
 CORS(app)
 service = PrologService()
+
+
+@app.route('/', methods=['get'])
+def index():
+    return render_template("index.html")
 
 
 @app.route('/debug/', methods=['post'])
