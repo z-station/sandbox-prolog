@@ -161,6 +161,22 @@ def test_execute__empty_result__return_none(mocker):
     )
 
 
+def test_execute__write_to_file_system__error(mocker):
+
+    # arrange
+    code = '?ЗАПИСЬ_В("output.txt").'
+    mocker.patch('app.config.TIMEOUT', 1)
+
+    # act
+    exec_result = PrologDService._execute(code=code)
+
+    # assert
+    assert exec_result.result == 'НЕТ'
+    assert exec_result.error == (
+        '1 Возникло исключение в процессе исполнения (43)'
+    )
+
+
 def test_execute__deep_recursive__raise_exception(mocker):
 
     # arrange
