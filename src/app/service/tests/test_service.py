@@ -9,7 +9,7 @@ from app.entities import (
     TestData
 )
 from app.service.entities import ExecuteResult
-from app.service.exceptions import CheckerException, TimeoutException
+from app.service.exceptions import CheckerException
 from app.service import messages
 from app import config
 
@@ -177,7 +177,7 @@ def test_execute__write_to_file_system__error(mocker):
     )
 
 
-def test_execute__deep_recursive__raise_exception(mocker):
+def test_execute__deep_recursive__error(mocker):
 
     # arrange
     code = (
@@ -190,11 +190,11 @@ def test_execute__deep_recursive__raise_exception(mocker):
     mocker.patch('app.config.TIMEOUT', 1)
 
     # act
-    with pytest.raises(TimeoutException) as ex:
-        PrologDService._execute(code=code)
+    execute_result = PrologDService._execute(code=code)
 
     # assert
-    assert ex.value.message == messages.MSG_1
+    assert execute_result.error == messages.MSG_1
+    assert execute_result.result is None
 
 
 def test_check__true__ok():

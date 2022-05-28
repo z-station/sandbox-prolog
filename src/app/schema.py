@@ -87,19 +87,19 @@ class BadRequestSchema(Schema):
     details = Method('dump_details')
 
     def dump_error(self, obj):
-        ex = obj.description
-        if isinstance(ex, ServiceException):
-            return ex.message
-        elif isinstance(ex, ValidationError):
-            return 'Validation error'
-        else:
-            return 'Internal error'
+        return 'Validation error'
 
     def dump_details(self, obj):
-        ex = obj.description
-        if isinstance(ex, ServiceException):
-            return ex.details
-        elif isinstance(ex, ValidationError):
-            return ex.messages
-        else:
-            return str(ex)
+        return obj.description.messages
+
+
+class ServiceExceptionSchema(Schema):
+
+    error = Method('dump_error')
+    details = Method('dump_details')
+
+    def dump_error(self, obj):
+        return obj.description.message
+
+    def dump_details(self, obj):
+        return obj.description.details

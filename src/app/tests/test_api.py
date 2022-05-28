@@ -99,7 +99,7 @@ def test_debug__not_result__ok(client, mocker):
     debug_mock.assert_called_once_with(serialized_data)
 
 
-def test_debug__service_exception__bad_request(client, mocker):
+def test_debug__service_exception__internal_error(client, mocker):
 
     # arrange
     request_data = {
@@ -120,7 +120,7 @@ def test_debug__service_exception__bad_request(client, mocker):
     response = client.post('/debug/', json=request_data)
 
     # assert
-    assert response.status_code == 400
+    assert response.status_code == 500
     assert response.json['error'] == service_ex.message
     assert response.json['details'] == service_ex.details
 
@@ -326,7 +326,7 @@ def test_testing__not_test_error__ok(client, mocker):
     testing_mock.assert_called_once_with(serialized_data)
 
 
-def test_testing__service_exception__bad_request__ok(client, mocker):
+def test_testing__service_exception__internal_error(client, mocker):
 
     # arrange
     request_data = {
@@ -357,7 +357,7 @@ def test_testing__service_exception__bad_request__ok(client, mocker):
     response = client.post('/testing/', json=request_data)
 
     # assert
-    assert response.status_code == 400
+    assert response.status_code == 500
     assert response.json['error'] == service_ex.message
     assert response.json['details'] == service_ex.details
 
