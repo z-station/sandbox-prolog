@@ -73,7 +73,6 @@ def test_execute__data_in_is_string__ok():
 
     # assert
     assert exec_result.result == (
-        'строка1\n'
         'x=строка1'
     )
     assert exec_result.error is None
@@ -93,8 +92,58 @@ def test_execute__data_in_is_integer__ok():
 
     # assert
     assert exec_result.result == (
-        '42\n'
         'x=42'
+    )
+    assert exec_result.error is None
+
+
+@pytest.mark.skip
+def test_execute__vvod_split_chars_by_spaces__ok():
+
+    # arrange
+    data_in = '1 2\n3 4'
+    code = (
+        'тест:-ВВОДЦЕЛ(A),ВВОДЦЕЛ(B),ВВОДЦЕЛ(C),ВВОДЦЕЛ(D),ВЫВОД(A,B,C,D).\n'
+        '?тест.'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        '1234\n'
+        'ДА'
+    )
+    assert exec_result.error is None
+
+
+@pytest.mark.skip
+def test_execute__russian_chars__ok():
+
+    # arrange
+    code = (
+        '?ВЫВОД(Ёё).\n'
+        '?ВЫВОД("Ёё").\n'
+        'ЧёЁ(Ё):-УМНОЖЕНИЕ(М,2,0,Ё).\n'
+        '?ЧёЁ(2).'
+        '?ЧёЁ(3).'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'Ёё\n'
+        'ДА\n'
+        'Ёё\n'
+        'ДА\n'
+        'ДА\n'
+        'НЕТ'
     )
     assert exec_result.error is None
 
@@ -118,9 +167,7 @@ def test_execute__data_in_is_multiline__ok():
 
     # assert
     assert exec_result.result == (
-        'строка1\n'
         'x=строка1\n'
-        '42\n'
         'x=42'
     )
     assert exec_result.error is None
