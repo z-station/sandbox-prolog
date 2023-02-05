@@ -97,13 +97,13 @@ def test_execute__data_in_is_integer__ok():
     assert exec_result.error is None
 
 
-@pytest.mark.skip
 def test_execute__vvod_split_chars_by_spaces__ok():
 
     # arrange
-    data_in = '1 2\n3 4'
+    data_in = '1 2\n 3 4'
     code = (
-        'тест:-ВВОДЦЕЛ(A),ВВОДЦЕЛ(B),ВВОДЦЕЛ(C),ВВОДЦЕЛ(D),ВЫВОД(A,B,C,D).\n'
+        'тест:-ВВОДЦЕЛ(A),ВВОДЦЕЛ(B),ВВОДЦЕЛ(C),\n'
+        'ВВОДЦЕЛ(D),ВЫВОД(A,B,C,D).\n'
         '?тест.'
     )
     # act
@@ -120,7 +120,6 @@ def test_execute__vvod_split_chars_by_spaces__ok():
     assert exec_result.error is None
 
 
-@pytest.mark.skip
 def test_execute__russian_chars__ok():
 
     # arrange
@@ -128,7 +127,7 @@ def test_execute__russian_chars__ok():
         '?ВЫВОД(Ёё).\n'
         '?ВЫВОД("Ёё").\n'
         'ЧёЁ(Ё):-УМНОЖЕНИЕ(М,2,0,Ё).\n'
-        '?ЧёЁ(2).'
+        '?ЧёЁ(2).\n'
         '?ЧёЁ(3).'
     )
     # act
