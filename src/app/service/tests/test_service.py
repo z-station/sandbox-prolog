@@ -147,6 +147,40 @@ def test_execute__russian_chars__ok():
     assert exec_result.error is None
 
 
+def test_execute__podbor_new_lines_and_spaces__ok():
+
+    # arrange
+    data_in = '10'
+    code = (
+        'сомножители:-ВВОДЦЕЛ(Н),подбор(Н,1).\n'
+        'подбор(Н,А):-БОЛЬШЕ(А,Н),!.\n'
+        'подбор(Н,А):-БОЛЬШЕ(Н,А),СЛОЖЕНИЕ(А,Б,Н),ПС,!,ВЫВОД(А," ",Б),подбор(Н,#А+1#).\n'
+        'подбор(Н,А):-подбор(Н,#А+1#).\n'
+        '?сомножители.\n'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        '\n'
+        '1 9\n'
+        '2 8\n'
+        '3 7\n'
+        '4 6\n'
+        '5 5\n'
+        '6 4\n'
+        '7 3\n'
+        '8 2\n'
+        '9 1\n'
+        'ДА'
+    )
+    assert exec_result.error is None
+
+
 def test_execute__data_in_is_multiline__ok():
 
     # arrange
