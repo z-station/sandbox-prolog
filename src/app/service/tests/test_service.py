@@ -120,6 +120,43 @@ def test_execute__vvod_split_chars_by_spaces__ok():
     assert exec_result.error is None
 
 
+def test_execute__dlina_with_spaces_1__ok():
+
+    # arrange
+    code = (
+        '?ДЛИНА("",0).'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'ДА'
+    )
+    assert exec_result.error is None
+
+
+def test_execute__dlina_with_spaces_2__ok():
+
+    # arrange
+    code = (
+        '?РАВНО(С,""),РАВНО(Д,0),ДЛИНА(С,Д).'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'С=\n'
+        'Д=0'
+    )
+    assert exec_result.error is None
+
+
 def test_execute__russian_chars__ok():
 
     # arrange
@@ -257,7 +294,7 @@ def test_execute__write_to_file_system__error(mocker):
     )
 
 
-def test_execute__deep_recursive__error(mocker):
+def test_execute__deep_recursive_1__error(mocker):
 
     # arrange
     code = (
@@ -266,6 +303,24 @@ def test_execute__deep_recursive__error(mocker):
        'фиб(Н,Ф):-СЛОЖЕНИЕ(К,1,Н),СЛОЖЕНИЕ(М,1,К),'
        'фиб(М,А),фиб(К,Б),СЛОЖЕНИЕ(А,Б,Ф).\n'
        '?фиб(32,Ю).'
+    )
+    mocker.patch('app.config.TIMEOUT', 1)
+
+    # act
+    execute_result = PrologDService._execute(code=code)
+
+    # assert
+    assert execute_result.error == messages.MSG_1
+    assert execute_result.result is None
+
+
+def test_execute__deep_recursive_2__error(mocker):
+
+    # arrange
+    code = (
+       'baz(0). baz(1). baz(2).\n'
+       'qux(X):-baz(X), baz(Z), baz(Z), qux(Z).\n'
+       '?qux(X).'
     )
     mocker.patch('app.config.TIMEOUT', 1)
 
