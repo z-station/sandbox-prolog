@@ -243,6 +243,70 @@ def test_execute__data_in_is_multiline__ok():
     assert exec_result.error is None
 
 
+def test_execute__version__ok():
+
+    # arrange
+    data_in = (
+        '21 февраля 2023'
+    )
+    code = (
+        '?ВЕРСИЯ.'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'ДА'
+    )
+    assert exec_result.error is None
+
+
+def test_execute__ticho__ok():
+
+    # arrange
+    data_in = (
+        '21 февраля 2023'
+    )
+    code = (
+        '?ТИХО,ВЕРСИЯ.'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # assert
+    assert exec_result.result is None
+    assert exec_result.error is None
+
+
+def test_execute__vvodstr__ok():
+
+    # arrange
+    data_in = (
+        '21 февраля 2023'
+    )
+    code = (
+        '?ТИХО,ВВОДСТР(С),ВЫВОД(С). %ввод (1 2 3)'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        '1 2 3'
+    )
+    assert exec_result.error is None
+
+
 def test_execute__empty_result__return_none(mocker):
 
     # arrange
