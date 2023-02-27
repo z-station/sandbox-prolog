@@ -246,11 +246,40 @@ def test_execute__data_in_is_multiline__ok():
 def test_execute__version__ok():
 
     # arrange
-    data_in = (
-        '21 февраля 2023'
+    code = '?ВЕРСИЯ.'
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
     )
+
+    # assert
+    assert exec_result.result == '26 февраля 2023\nДА'
+    assert exec_result.error is None
+
+
+def test_execute__ticho__ok():
+
+    # arrange
     code = (
-        '?ВЕРСИЯ.'
+        '?ТИХО,ВЕРСИЯ.'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == '26 февраля 2023'
+    assert exec_result.error is None
+
+
+def test_execute__vvodstr__ok():
+
+    # arrange
+    data_in = '1 2 3'
+    code = (
+        '?ВВОДСТР(C),ВЫВОД(C). %ввод (1 2 3)'
     )
     # act
     exec_result = PrologDService._execute(
@@ -260,37 +289,15 @@ def test_execute__version__ok():
 
     # assert
     assert exec_result.result == (
-        'ДА'
+        '1 2 3C=1 2 3'
     )
     assert exec_result.error is None
 
 
-def test_execute__ticho__ok():
+def test_execute__ticho_vvodstr__ok():
 
     # arrange
-    data_in = (
-        '21 февраля 2023'
-    )
-    code = (
-        '?ТИХО,ВЕРСИЯ.'
-    )
-    # act
-    exec_result = PrologDService._execute(
-        data_in=data_in,
-        code=code
-    )
-
-    # assert
-    assert exec_result.result is None
-    assert exec_result.error is None
-
-
-def test_execute__vvodstr__ok():
-
-    # arrange
-    data_in = (
-        '21 февраля 2023'
-    )
+    data_in = '1 2 3'
     code = (
         '?ТИХО,ВВОДСТР(С),ВЫВОД(С). %ввод (1 2 3)'
     )
@@ -301,9 +308,7 @@ def test_execute__vvodstr__ok():
     )
 
     # assert
-    assert exec_result.result == (
-        '1 2 3'
-    )
+    assert exec_result.result == '1 2 3'
     assert exec_result.error is None
 
 
