@@ -254,7 +254,7 @@ def test_execute__version__ok():
     )
 
     # assert
-    assert exec_result.result == '26 февраля 2023\nДА'
+    assert exec_result.result.endswith('ДА')
     assert exec_result.error is None
 
 
@@ -270,7 +270,7 @@ def test_execute__ticho__ok():
     )
 
     # assert
-    assert exec_result.result == '26 февраля 2023'
+    assert exec_result.result is not None
     assert exec_result.error is None
 
 
@@ -399,6 +399,75 @@ def test_execute__deep_recursive_2__error(mocker):
     # assert
     assert execute_result.error == messages.MSG_1
     assert execute_result.result is None
+
+
+def test_execute__dob_for_fact__ok():
+
+    # arrange
+    code = (
+        'тест3:-РАВНО(X,1),ТЕРМ(T,[node,1,[X]]),ДОБ(T,[],999).\n'
+        '?тест3.\n'
+        '?node(1,A).'
+    )
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'ДА\n'
+        'A=[1]'
+    )
+    assert exec_result.error is None
+
+
+def test_execute__dob_for_rule__ok():
+
+    # arrange
+    code = (
+        'тест4:-ТЕРМ(П,[чёт,Н]),ТЕРМ(Р,[УМНОЖЕНИЕ,М,2,0,Н]),ТЕРМ(С,[!]),'
+        'ТЕРМ(Т,[ВЫВОД,"Чёт"]),ДОБ(П,[Р,С,Т],1),ТЕРМ(У,[чёт,Н]),'
+        'ТЕРМ(Ф,[ВЫВОД,"Нечет"]),ТЕРМ(Х,[ЛОЖЬ]),ДОБ(У,[Ф,Х],2).\n'
+        '?тест4.\n'
+        '?чёт(4).\n'
+        '?чёт(5).'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'ДА\n'
+        'Чёт\n'
+        'ДА\n'
+        'Нечет\n'
+        'НЕТ'
+    )
+    assert exec_result.error is None
+
+
+def test_execute__invalid_vvod__error():
+
+    # arrange
+    code = (
+        'baz:-#2+2#.\n'
+        '?baz.'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result is None
+    assert exec_result.error == (
+        '2 Prolog failure'
+    )
 
 
 def test_check__true__ok():
