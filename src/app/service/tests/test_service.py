@@ -470,6 +470,44 @@ def test_execute__invalid_vvod__error():
     )
 
 
+def test_execute__copy__ok():
+
+    # arrange
+    code = (
+        '?КОПИЯ(идиотизм,Х,1,"и"). % Х=1\n'
+        '?КОПИЯ(идиотизм,Х,-1,"и"). % Х=6'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == 'Х=1\nХ=6'
+    assert exec_result.error is None
+
+
+def test_execute__stack_ordering__ok():
+
+    # arrange
+    code = (
+        'Фиб(1,1).\n'
+        'Фиб(2,1).\n'
+        'Фиб(Н,Ф):-БОЛЬШЕ(Н,2),Фиб(#Н-2#,А),Фиб(#Н-1#,Б),СЛОЖЕНИЕ(А,Б,Ф).\n'
+        '?Фиб(20,Ф). % Ф=6765'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == 'Ф=6765'
+    assert exec_result.error is None
+
+
 def test_check__true__ok():
 
     # arrange
