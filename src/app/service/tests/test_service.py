@@ -258,7 +258,7 @@ def test_execute__version__ok():
     assert exec_result.error is None
 
 
-def test_execute__ticho__ok():
+def test_execute__ticho_version__ok():
 
     # arrange
     code = (
@@ -505,6 +505,56 @@ def test_execute__stack_ordering__ok():
 
     # assert
     assert exec_result.result == 'Ф=6765'
+    assert exec_result.error is None
+
+
+def test_execute__stack_ordering_with_dob__ok():
+
+    # arrange
+    code = (
+        'Фиб(1,1).\n'
+        'Фиб(2,1).\n'
+        'Фиб(Н,Ф):-СКОЛЬКО(Фиб,С),НЕ(МЕНЬШЕ(Н,С)),!,\n'
+        '%          Фиб(#Н-2#,А),Фиб(#Н-1#,Б),\n'
+        '          СЛОЖЕНИЕ(К,2,Н),Фиб(К,А),СЛОЖЕНИЕ(М,1,Н),Фиб(М,Б),\n'
+        '          СЛОЖЕНИЕ(А,Б,Ф),ДОБ(Фиб(Н,Ф),[],Н).\n'
+        '?Фиб(550,Ф).\n'
+        '?СКОЛЬКО(Фиб,К).'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'Ф=392389281167701502035989380975639763547857503498418581064'
+        '5229419917883032980568363855269097880889736899565213021775\n'
+        'К=551'
+    )
+    assert exec_result.error is None
+
+
+def test_execute__term__ok():
+
+    # arrange
+    code = (
+        '?ТЕРМ(Т,[кодер,Лёша]). % Т=кодер(Лёша)\n'
+        '?РАВНО(К,кодер),ТЕРМ(Т,[К,Лёша]). % НЕТ'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'Т=кодер(Лёша)\n'
+        'К=кодер\n'
+        'Т=кодер(Лёша)'
+    )
     assert exec_result.error is None
 
 
