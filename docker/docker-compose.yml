@@ -13,7 +13,7 @@ services:
     image: sandbox-prolog-d
     volumes:
       - ../src:/app/src
-      - shared_files:/sandbox/files/prolog-d:ro
+      - shared_files:/sandbox/files:ro
     ports:
       - "9003:9003"
     networks:
