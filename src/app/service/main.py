@@ -47,7 +47,7 @@ class PrologDService:
             возвращает результат работы программы, либо ошибку компиляции """
 
         proc = subprocess.Popen(
-            args=['prologd', '-d=files'],
+            args=['prologd', '-d=files/prolog-d'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
