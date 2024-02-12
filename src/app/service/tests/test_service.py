@@ -120,6 +120,44 @@ def test_execute__vvod_split_chars_by_spaces__ok():
     assert exec_result.error is None
 
 
+def test_execute__remove_empty_lines_from_code__ok(mocker):
+
+    # arrange
+    data_in = '1 2 3 4'
+    code = (
+        'тест:-ВВОДЦЕЛ(A),ВВОДЦЕЛ(B),ВВОДЦЕЛ(C),\n'
+        '\n'
+        'ВВОДЦЕЛ(D),ВЫВОД(A,B,C,D).\n'
+        '\r\n'
+        '\n'
+        '\r'
+        '?тест.'
+    )
+    communicate_mock = mocker.patch(
+        'subprocess.Popen.communicate',
+        return_value=('', '')
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        data_in=data_in,
+        code=code
+    )
+
+    # act
+    assert exec_result.result is None
+    assert exec_result.error is None
+    communicate_mock.assert_called_once_with(
+        input=(
+            '$1 2 3 4\n'
+            'тест:-ВВОДЦЕЛ(A),ВВОДЦЕЛ(B),ВВОДЦЕЛ(C),\n'
+            'ВВОДЦЕЛ(D),ВЫВОД(A,B,C,D).\n'
+            '?тест.'
+        ),
+        timeout=config.TIMEOUT
+    )
+
+
 def test_execute__dlina_with_spaces_1__ok():
 
     # arrange

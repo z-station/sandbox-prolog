@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 from typing import Optional
 from app.entities import (
@@ -28,6 +29,11 @@ class PrologDService:
         data_in: Optional[str] = None
     ) -> str:
 
+        """ Remove empty lines in code
+            Encode input lines with prefix $
+            Then union input and code in one string """
+
+        code = re.sub(r'(?:[\t ]*(?:\r?\n|\r))+', '\n', code)
         if data_in:
             stdin = '$' + data_in.strip()
             if stdin.find('\n') > 0:
