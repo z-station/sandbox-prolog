@@ -595,6 +595,26 @@ def test_execute__term__ok():
     )
     assert exec_result.error is None
 
+def test_execute__term__ok():
+
+    # arrange
+    code = (
+        '?УМНОЖЕНИЕ(2,А,9).\n'
+        '?УМНОЖЕНИЕ(A,2,9).'
+    )
+
+    # act
+    exec_result = PrologDService._execute(
+        code=code
+    )
+
+    # assert
+    assert exec_result.result == (
+        'А=4.5\n'
+        'A=4.5'
+    )
+    assert exec_result.error is None
+
 
 def test_check__true__ok():
 
